@@ -1,0 +1,42 @@
+{
+  "searchResults": {
+    "total": 24,
+    "location": "New York",
+    "dates": ["2024-03-20", "2024-03-25"],
+    "guests": 2,
+    "properties": [
+      {
+        "id": 1,
+        "title": "Modern Beachfront Apartment",
+        "type": "Apartment",
+        "price": 299,
+        "rating": 4.8,
+        "reviews": 120,
+        "images": ["/properties/property1.jpg"],
+        "description": "Stunning beachfront apartment with panoramic ocean views",
+        "amenities": ["WiFi", "Kitchen", "Pool", "Parking"],
+        "location": {
+          "lat": 40.7128,
+          "lng": -74.0060
+        },
+        "instantBook": true
+      },
+      {
+        "id": 2,
+        "title": "Luxury Downtown Loft",
+        "type": "Loft",
+        "price": 399,
+        "rating": 4.9,
+        "reviews": 85,
+        "images": ["/properties/property2.jpg"],
+        "description": "Spacious industrial-style loft in the heart of downtown",
+        "amenities": ["WiFi", "Kitchen", "Gym", "Parking"],
+        "location": {
+          "lat": 40.7589,
+          "lng": -73.9851
+        },
+        "instantBook": false
+      }
+    ]
+  }
+} 

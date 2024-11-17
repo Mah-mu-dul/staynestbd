@@ -1,0 +1,24 @@
+{
+  "popularDestinations": [
+    {
+      "name": "Bali",
+      "description": "Tropical Paradise",
+      "image": "/bali.jpg"
+    },
+    {
+      "name": "Tokyo",
+      "description": "Urban Excitement", 
+      "image": "/tokyo.jpg"
+    },
+    {
+      "name": "Paris",
+      "description": "City of Love",
+      "image": "/paris.jpg"
+    },
+    {
+      "name": "New York",
+      "description": "The City That Never Sleeps",
+      "image": "/newyork.jpg"
+    }
+  ]
+} 

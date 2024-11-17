@@ -1,0 +1,24 @@
+{
+  "navigationItems": [
+    {
+      "name": "Explore",
+      "path": "/explore",
+      "hasNotification": false
+    },
+    {
+      "name": "Become a Host",
+      "path": "/become-host",
+      "hasNotification": true
+    },
+    {
+      "name": "Sign Up",
+      "path": "/signup",
+      "hasNotification": false
+    },
+    {
+      "name": "Log In",
+      "path": "/login",
+      "hasNotification": false
+    }
+  ]
+} 

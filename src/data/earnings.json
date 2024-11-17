@@ -1,0 +1,82 @@
+[
+    {
+      "id": 1,
+      "property": "Oceanview Villa",
+      "bookingId": "BK-2024-001", 
+      "guest": "John Smith",
+      "checkIn": "2024-04-15",
+      "checkOut": "2024-04-20",
+      "amount": 1250,
+      "date": "2024-04-15"
+    },
+    {
+      "id": 2,
+      "property": "Mountain Cabin", 
+      "bookingId": "BK-2024-002",
+      "guest": "Sarah Wilson", 
+      "checkIn": "2024-03-10",
+      "checkOut": "2024-03-15",
+      "amount": 850,
+      "date": "2024-03-10"
+    },
+    {
+      "id": 3,
+      "property": "Downtown Loft",
+      "bookingId": "BK-2024-003",
+      "guest": "Mike Johnson",
+      "checkIn": "2024-03-01",
+      "checkOut": "2024-03-05", 
+      "amount": 750,
+      "date": "2024-03-01"
+    },
+    {
+      "id": 4,
+      "property": "Beachfront Condo",
+      "bookingId": "BK-2024-004",
+      "guest": "Emily Chen",
+      "checkIn": "2024-02-20",
+      "checkOut": "2024-02-25",
+      "amount": 1100,
+      "date": "2024-02-20"
+    },
+    {
+      "id": 5,
+      "property": "Oceanview Villa",
+      "bookingId": "BK-2024-005",
+      "guest": "David Lee",
+      "checkIn": "2024-11-01",
+      "checkOut": "2024-11-05",
+      "amount": 1250,
+      "date": "2024-04-01"
+    },
+    {
+      "id": 6, 
+      "property": "Mountain Cabin",
+      "bookingId": "BK-2024-006",
+      "guest": "Rachel Green",
+      "checkIn": "2024-04-05",
+      "checkOut": "2024-04-10",
+      "amount": 850,
+      "date": "2024-04-05"
+    },
+    {
+      "id": 7,
+      "property": "Downtown Loft", 
+      "bookingId": "BK-2024-007",
+      "guest": "Tom Brown",
+      "checkIn": "2024-04-08",
+      "checkOut": "2024-04-12",
+      "amount": 750,
+      "date": "2024-04-08"
+    },
+    {
+      "id": 8,
+      "property": "Beachfront Condo",
+      "bookingId": "BK-2024-008", 
+      "guest": "Lisa Wong",
+      "checkIn": "2024-09-12",
+      "checkOut": "2024-09-17",
+      "amount": 1100,
+      "date": "2024-04-12"
+    }
+]
