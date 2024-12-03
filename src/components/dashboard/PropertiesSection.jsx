@@ -222,11 +222,11 @@ export default function PropertiesSection() {
             <option value="inactive">Inactive</option>
           </select>
           <select 
-            className="select select-bordered w-full max-w-xs"
+            className="select select-bordered w-fit max-w-xs"
             value={sortBy}
             onChange={handleSort}
           >
-            <option value="">Sort By</option>
+            <option value="">All</option> 
             <option value="earnings-high">Earnings: High to Low</option>
             <option value="earnings-low">Earnings: Low to High</option>
             <option value="bookings">Bookings</option>

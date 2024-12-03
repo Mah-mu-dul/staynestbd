@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { 
-  FaHome, 
-  FaDollarSign, 
-  FaCheckCircle, 
-  FaWifi, 
-  FaParking, 
-  FaSnowflake, 
+import React, { useState } from "react";
+import {
+  FaHome,
+  FaDollarSign,
+  FaCheckCircle,
+  FaWifi,
+  FaParking,
+  FaSnowflake,
   FaDog,
   FaTshirt,
   FaCamera,
@@ -13,13 +13,13 @@ import {
   FaCalendarAlt,
   FaPercent,
   FaUpload,
-  FaTrash
-} from 'react-icons/fa';
+  FaTrash,
+} from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { motion } from "framer-motion";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function BecomeAHostPage() {
   const [activeStep, setActiveStep] = useState(1);
@@ -27,69 +27,69 @@ export default function BecomeAHostPage() {
   const [images, setImages] = useState([]);
   const [availabilityDates, setAvailabilityDates] = useState([null, null]);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    propertyType: '',
-    location: '',
+    title: "",
+    description: "",
+    propertyType: "",
+    location: "",
     amenities: {
       wifi: false,
       parking: false,
       airConditioning: false,
       washerDryer: false,
-      petFriendly: false
+      petFriendly: false,
     },
-    houseRules: '',
-    pricePerNight: '',
-    weeklyDiscount: '',
-    monthlyDiscount: ''
+    houseRules: "",
+    pricePerNight: "",
+    weeklyDiscount: "",
+    monthlyDiscount: "",
   });
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map(file => ({
+    const newImages = files.map((file) => ({
       url: URL.createObjectURL(file),
-      file: file
+      file: file,
     }));
     setImages([...images, ...newImages]);
-    toast.success('Images uploaded successfully!', {
+    toast.success("Images uploaded successfully!", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      theme: "colored"
+      theme: "colored",
     });
   };
 
   const removeImage = (index) => {
     const newImages = images.filter((_, i) => i !== index);
     setImages(newImages);
-    toast.info('Image removed', {
+    toast.info("Image removed", {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      theme: "colored"
+      theme: "colored",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setFormData(prev => ({
+    if (type === "checkbox") {
+      setFormData((prev) => ({
         ...prev,
         amenities: {
           ...prev.amenities,
-          [name]: checked
-        }
+          [name]: checked,
+        },
       }));
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -101,60 +101,60 @@ export default function BecomeAHostPage() {
 
   const handleStepClick = (step) => {
     setActiveStep(step);
-    setFormProgress(step * 33);
+    setFormProgress(step === 3 ? 100 : step * 33);
   };
 
   const handleSubmit = () => {
     // Validate form data
     if (!formData.title || !formData.description || !formData.propertyType) {
-      toast.error('Please fill in all required fields', {
+      toast.error("Please fill in all required fields", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        theme: "colored"
+        theme: "colored",
       });
       return;
     }
 
     // Submit form data to backend
-    console.log('Submitting form data:', formData);
-    console.log('Uploaded images:', images);
-    console.log('Availability dates:', availabilityDates);
+    console.log("Submitting form data:", formData);
+    console.log("Uploaded images:", images);
+    console.log("Availability dates:", availabilityDates);
 
     // Reset form
     setFormData({
-      title: '',
-      description: '',
-      propertyType: '',
-      location: '',
+      title: "",
+      description: "",
+      propertyType: "",
+      location: "",
       amenities: {
         wifi: false,
         parking: false,
         airConditioning: false,
         washerDryer: false,
-        petFriendly: false
+        petFriendly: false,
       },
-      houseRules: '',
-      pricePerNight: '',
-      weeklyDiscount: '',
-      monthlyDiscount: ''
+      houseRules: "",
+      pricePerNight: "",
+      weeklyDiscount: "",
+      monthlyDiscount: "",
     });
     setImages([]);
     setAvailabilityDates([null, null]);
     setActiveStep(1);
     setFormProgress(0);
 
-    toast.success('Property listing submitted successfully!', {
+    toast.success("Property listing submitted successfully!", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      theme: "colored"
+      theme: "colored",
     });
   };
 
@@ -174,7 +174,7 @@ export default function BecomeAHostPage() {
       />
       <div className="container mx-auto px-4">
         {/* Header Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -184,7 +184,7 @@ export default function BecomeAHostPage() {
           <p className="text-base md:text-lg text-base-content/70 mb-6 md:mb-8 px-4">
             List your property and start earning today!
           </p>
-          <motion.button 
+          <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="btn btn-primary btn-md md:btn-lg rounded-full"
@@ -196,7 +196,7 @@ export default function BecomeAHostPage() {
 
         {/* Progress Bar */}
         <div className="w-full bg-base-300 rounded-full h-3 md:h-4 mb-6 md:mb-8">
-          <motion.div 
+          <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${formProgress}%` }}
             transition={{ duration: 0.5 }}
@@ -208,23 +208,27 @@ export default function BecomeAHostPage() {
         <div className="flex justify-between mb-8 md:mb-12 relative">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-base-300 -translate-y-1/2 z-0"></div>
           {[1, 2, 3].map((step) => (
-            <motion.div 
+            <motion.div
               key={step}
               whileHover={{ scale: 1.05 }}
               onClick={() => handleStepClick(step)}
               className={`relative z-10 flex flex-col items-center bg-base-100 p-2 md:p-4 rounded-full cursor-pointer ${
-                activeStep >= step ? 'text-primary' : 'text-base-content/50'
+                activeStep >= step ? "text-primary" : "text-base-content/50"
               }`}
             >
-              <div className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center text-base md:text-lg font-bold mb-1 md:mb-2 ${
-                activeStep >= step ? 'bg-primary text-white' : 'bg-base-300'
-              }`}>
+              <div
+                className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center text-base md:text-lg font-bold mb-1 md:mb-2 ${
+                  activeStep >= step ? "bg-primary text-white" : "bg-base-300"
+                }`}
+              >
                 {step}
               </div>
               <span className="text-xs md:text-sm font-medium whitespace-nowrap hidden md:block">
-                {step === 1 ? 'Property Details' : 
-                 step === 2 ? 'Amenities & Rules' : 
-                 'Pricing & Dates'}
+                {step === 1
+                  ? "Property Details"
+                  : step === 2
+                  ? "Amenities & Rules"
+                  : "Pricing & Dates"}
               </span>
             </motion.div>
           ))}
@@ -234,7 +238,12 @@ export default function BecomeAHostPage() {
         <div className="max-w-4xl mx-auto">
           {/* Property Details */}
           <div className="collapse collapse-arrow bg-base-100 mb-4">
-            <input type="radio" name="my-accordion-2" checked={activeStep === 1} onChange={() => handleStepClick(1)} /> 
+            <input
+              type="radio"
+              name="my-accordion-2"
+              checked={activeStep === 1}
+              onChange={() => handleStepClick(1)}
+            />
             <div className="collapse-title text-xl font-medium bg-secondary text-secondary-content">
               <FaHome className="inline-block mr-2" /> Property Details
             </div>
@@ -271,7 +280,7 @@ export default function BecomeAHostPage() {
                   <label className="label">
                     <span className="label-text">Property Type</span>
                   </label>
-                  <select 
+                  <select
                     name="propertyType"
                     className="select select-bordered w-full"
                     value={formData.propertyType}
@@ -290,12 +299,12 @@ export default function BecomeAHostPage() {
                   <label className="label">
                     <span className="label-text">Upload Photos</span>
                   </label>
-                  <motion.div 
+                  <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileDrag={{ scale: 1.05, borderColor: "#570DF8" }}
-                    animate={{ 
+                    animate={{
                       borderColor: ["#D1D5DB", "#570DF8", "#D1D5DB"],
-                      transition: { duration: 1, repeat: Infinity }
+                      transition: { duration: 1, repeat: Infinity },
                     }}
                     className="border-2 border-dashed border-base-300 rounded-lg p-8 text-center"
                     onDragOver={(e) => {
@@ -305,7 +314,9 @@ export default function BecomeAHostPage() {
                     onDrop={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+                      const files = Array.from(e.dataTransfer.files).filter(
+                        (file) => file.type.startsWith("image/")
+                      );
                       if (files.length > 0) {
                         const event = { target: { files } };
                         handleImageUpload(event);
@@ -320,8 +331,8 @@ export default function BecomeAHostPage() {
                       id="image-upload"
                       onChange={handleImageUpload}
                     />
-                    <motion.label 
-                      htmlFor="image-upload" 
+                    <motion.label
+                      htmlFor="image-upload"
                       className="cursor-pointer"
                       whileDrag={{ scale: 1.1 }}
                     >
@@ -337,8 +348,8 @@ export default function BecomeAHostPage() {
                   {images.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                       {images.map((image, index) => (
-                        <motion.div 
-                          key={index} 
+                        <motion.div
+                          key={index}
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           className="relative"
@@ -367,7 +378,12 @@ export default function BecomeAHostPage() {
 
           {/* Amenities & Rules Section */}
           <div className="collapse collapse-arrow bg-base-100 mb-4">
-            <input type="radio" name="my-accordion-2" checked={activeStep === 2} onChange={() => handleStepClick(2)} />
+            <input
+              type="radio"
+              name="my-accordion-2"
+              checked={activeStep === 2}
+              onChange={() => handleStepClick(2)}
+            />
             <div className="collapse-title text-xl font-medium bg-secondary text-secondary-content">
               <FaWifi className="inline-block mr-2" /> Amenities & Rules
             </div>
@@ -375,58 +391,70 @@ export default function BecomeAHostPage() {
               <div className="space-y-6 p-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-medium">Available Amenities</span>
+                    <span className="label-text font-medium">
+                      Available Amenities
+                    </span>
                   </label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <label className="flex items-center space-x-2 cursor-pointer">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         name="wifi"
                         className="checkbox checkbox-primary"
                         checked={formData.amenities.wifi}
                         onChange={handleInputChange}
                       />
-                      <span><FaWifi className="inline mr-2" /> WiFi</span>
+                      <span>
+                        <FaWifi className="inline mr-2" /> WiFi
+                      </span>
                     </label>
                     <label className="flex items-center space-x-2 cursor-pointer">
-                      <input 
+                      <input
                         type="checkbox"
                         name="parking"
                         className="checkbox checkbox-primary"
                         checked={formData.amenities.parking}
                         onChange={handleInputChange}
                       />
-                      <span><FaParking className="inline mr-2" /> Parking</span>
+                      <span>
+                        <FaParking className="inline mr-2" /> Parking
+                      </span>
                     </label>
                     <label className="flex items-center space-x-2 cursor-pointer">
-                      <input 
+                      <input
                         type="checkbox"
                         name="airConditioning"
                         className="checkbox checkbox-primary"
                         checked={formData.amenities.airConditioning}
                         onChange={handleInputChange}
                       />
-                      <span><FaSnowflake className="inline mr-2" /> Air Conditioning</span>
+                      <span>
+                        <FaSnowflake className="inline mr-2" /> Air Conditioning
+                      </span>
                     </label>
                     <label className="flex items-center space-x-2 cursor-pointer">
-                      <input 
+                      <input
                         type="checkbox"
                         name="washerDryer"
                         className="checkbox checkbox-primary"
                         checked={formData.amenities.washerDryer}
                         onChange={handleInputChange}
                       />
-                      <span><FaTshirt className="inline mr-2" /> Washer/Dryer</span>
+                      <span>
+                        <FaTshirt className="inline mr-2" /> Washer/Dryer
+                      </span>
                     </label>
                     <label className="flex items-center space-x-2 cursor-pointer">
-                      <input 
+                      <input
                         type="checkbox"
                         name="petFriendly"
                         className="checkbox checkbox-primary"
                         checked={formData.amenities.petFriendly}
                         onChange={handleInputChange}
                       />
-                      <span><FaDog className="inline mr-2" /> Pet Friendly</span>
+                      <span>
+                        <FaDog className="inline mr-2" /> Pet Friendly
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -449,9 +477,15 @@ export default function BecomeAHostPage() {
 
           {/* Pricing & Availability Section */}
           <div className="collapse collapse-arrow bg-base-100 mb-4">
-            <input type="radio" name="my-accordion-2" checked={activeStep === 3} onChange={() => handleStepClick(3)} />
+            <input
+              type="radio"
+              name="my-accordion-2"
+              checked={activeStep === 3}
+              onChange={() => handleStepClick(3)}
+            />
             <div className="collapse-title text-xl font-medium bg-secondary text-secondary-content">
-              <FaDollarSign className="inline-block mr-2" /> Pricing & Availability
+              <FaDollarSign className="inline-block mr-2" /> Pricing &
+              Availability
             </div>
             <div className="collapse-content">
               <div className="space-y-6 p-4">
@@ -534,7 +568,7 @@ export default function BecomeAHostPage() {
           </div>
 
           <div className="mt-8 text-center">
-            <motion.button 
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="btn btn-primary btn-lg"
@@ -543,11 +577,12 @@ export default function BecomeAHostPage() {
               Submit Listing <FaCheckCircle className="ml-2" />
             </motion.button>
             <p className="mt-4 text-sm text-base-content/70">
-              By listing your property, you agree to our Terms of Service and Privacy Policy
+              By listing your property, you agree to our Terms of Service and
+              Privacy Policy
             </p>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}

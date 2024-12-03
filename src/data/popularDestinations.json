@@ -3,22 +3,22 @@
     {
       "name": "Bali",
       "description": "Tropical Paradise",
-      "image": "/bali.jpg"
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWabSKfcp2L10N52nWnkOits16-MnmOGDDGA&s"
     },
     {
       "name": "Tokyo",
-      "description": "Urban Excitement", 
-      "image": "/tokyo.jpg"
+      "description": "Urban Excitement",
+      "image": "https://www.kintetsu.com.au/wp-content/uploads/2022/07/Japan-school-tour-sample-shirakawago.jpg"
     },
     {
       "name": "Paris",
       "description": "City of Love",
-      "image": "/paris.jpg"
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_yNNcNKcnFypP6AwzjRYvfYniCsWPXccLg&s"
     },
     {
       "name": "New York",
       "description": "The City That Never Sleeps",
-      "image": "/newyork.jpg"
+      "image": "https://assets.simpleviewinc.com/simpleview/image/upload/c_fill,h_391,q_75,w_588/v1/clients/newyorkstate/chatwal_lodge_coteacostatravel_Instagram_640x474_cabec703-f71b-423c-a33b-a0b9a655981e.jpg"
     }
   ]
-} 
+}

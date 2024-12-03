@@ -25,11 +25,11 @@
       "location": "New York",
       "rating": 4.9,
       "price": 350,
-      "image": "/images/listings/city-loft.jpg",
+      "image": "https://www.caandesign.com/wp-content/uploads/2016/06/modern-city-loft-combine-black-white-natural-wood-designed-studio-mode-sofia-bulgaria-04.jpg",
       "images": [
-        "/images/listings/city-loft-1.jpg",
-        "/images/listings/city-loft-2.jpg",
-        "/images/listings/city-loft-3.jpg"
+        "https://img.freepik.com/premium-photo/soft-color-new-modern-city-loft-apartment-part-modern-loft-interior-with-clean-design_21085-11026.jpg",
+        "https://png.pngtree.com/background/20231017/original/pngtree-stylish-loft-living-contemporary-apartment-interior-with-modern-design-3d-rendering-picture-image_5592321.jpg",
+        "https://img.freepik.com/premium-photo/soft-color-new-modern-city-loft-apartment-part-modern-loft-interior-with-clean-design_21085-11028.jpg"
       ],
       "description": "Contemporary loft in the heart of Manhattan",
       "reviewCount": 89,

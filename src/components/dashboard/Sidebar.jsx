@@ -8,6 +8,7 @@ import {
   FaCalendarCheck,
   FaChartLine,
   FaBars,
+  FaBug,
 } from "react-icons/fa";
 
 export default function Sidebar({
@@ -37,7 +38,49 @@ export default function Sidebar({
     { icon: FaCog, label: "Profile Settings", section: "settings" },
   ];
 
-  const menuItems = userMode === "guest" ? guestMenuItems : hostMenuItems;
+  const adminMenuItems = [
+    { 
+      icon: FaHome, 
+      label: "Dashboard", 
+      section: "admin-dashboard",
+      path: "/admin/dashboard"
+    },
+    { 
+      icon: FaCalendarCheck, 
+      label: "Approve Requests", 
+      section: "approve-requests",
+      path: "/admin/approve-requests"
+    },
+    { 
+      icon: FaChartLine, 
+      label: "Reports", 
+      section: "reports",
+      path: "/admin/reports"
+    },
+    { 
+      icon: FaCog, 
+      label: "Settings", 
+      section: "settings",
+      path: "/admin/settings"
+    },
+    { 
+      icon: FaBug, 
+      label: "Bug Reports", 
+      section: "bug-reports",
+      path: "/admin/bug-reports"
+    },
+  ];
+
+  const menuItems = userMode === "guest" ? guestMenuItems : userMode === "host" ? hostMenuItems : adminMenuItems;
+
+  const handleNavigation = (e, item) => {
+    e.preventDefault();
+    setActiveSection(item.section);
+    window.history.pushState({}, '', item.path);
+    if (window.innerWidth < 1024) {
+      toggleSidebar();
+    }
+  };
 
   return (
     <div className="h-screen bg-white shadow-lg w-80 ">
@@ -49,13 +92,7 @@ export default function Sidebar({
               className={`flex items-center space-x-3 text-gray-700 hover:bg-gray-100 py-3 ${
                 activeSection === item.section ? "bg-gray-100" : ""
               }`}
-              onClick={(e) => {
-                e.preventDefault();
-                setActiveSection(item.section);
-                if (window.innerWidth < 1024) {
-                  toggleSidebar();
-                }
-              }}
+              onClick={(e) => handleNavigation(e, item)}
             >
               <item.icon className="h-5 w-5" />
               <span>{item.label}</span>

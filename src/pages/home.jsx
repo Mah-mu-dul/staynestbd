@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaHome, FaSearch } from "react-icons/fa";
+import { FaHome, FaSearch, FaUsers, FaMinus, FaPlus } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ViewDetails from "../components/View_details";
@@ -14,13 +14,18 @@ import { useEffect } from "react";
 export default function HomePage() {
   const [location, setLocation] = useState("");
   const [dateRange, setDateRange] = useState([null, null]);
-  const [guests, setGuests] = useState(1);
+  const [guestCounts, setGuestCounts] = useState({
+    adults: 0,
+    children: 0,
+    infants: 0,
+    pets: 0,
+  });
   const [startDate, endDate] = dateRange;
 
   useEffect(() => {
     AOS.init({
       duration: 1000,
-      once: true
+      once: true,
     });
   }, []);
 
@@ -40,10 +45,21 @@ export default function HomePage() {
       location: location,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
-      guests: guests,
+      guests:
+        guestCounts.adults +
+        guestCounts.children +
+        guestCounts.infants +
+        guestCounts.pets,
     });
 
     window.location.href = `/search-results?${searchParams.toString()}`;
+  };
+
+  const updateGuestCount = (type, increment) => {
+    setGuestCounts((prev) => ({
+      ...prev,
+      [type]: increment ? prev[type] + 1 : Math.max(0, prev[type] - 1),
+    }));
   };
 
   return (
@@ -54,67 +70,100 @@ export default function HomePage() {
       >
         <div className="hero-overlay bg-opacity-60"></div>
         <div className="hero-content text-center text-neutral-content">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="max-w-2xl"
+            className="max-w-4xl w-full"
           >
-            <h1 className="mb-5 text-5xl font-bold text-white">
-              Find Your Perfect Stay
-            </h1>
-            <div className="card bg-white shadow-xl p-6 w-fit hover:shadow-2xl transition-shadow duration-300">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <motion.input
-                  whileFocus={{ scale: 1.02 }}
+            <div className="flex items-center bg-white rounded-full shadow-lg p-2 w-full">
+              <div className="flex-1 flex flex-col px-4 border-r border-gray-200">
+                <label className="text-sm font-medium text-gray-700 text-left">
+                  Where
+                </label>
+                <input
                   type="text"
-                  placeholder="Where are you going?"
-                  className="input input-bordered w-full"
+                  placeholder="Search destinations"
+                  className="w-full outline-none text-gray-600 text-base placeholder-gray-400"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                 />
-                <div className="relative w-full">
-                  <DatePicker
-                    selectsRange={true}
-                    startDate={startDate}
-                    endDate={endDate}
-                    onChange={(update) => setDateRange(update)}
-                    className="input input-bordered w-full hover:border-primary transition-colors"
-                    placeholderText="Check-in & Check-out"
-                    wrapperClassName="w-full"
-                  />
-                </div>
-                <motion.div 
-                  whileHover={{ scale: 1.02 }}
-                  className="dropdown w-full"
-                >
-                  <label tabIndex={0} className="btn btn-outline w-full">
-                    {guests} Guest{guests !== 1 ? "s" : ""}
-                  </label>
-                  <ul
-                    tabIndex={0}
-                    className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                  >
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <motion.li 
-                        whileHover={{ backgroundColor: "#f0f0f0" }}
-                        key={num} 
-                        onClick={() => setGuests(num)}
-                      >
-                        <a>{num} Guest{num !== 1 ? "s" : ""}</a>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn btn-primary w-full mt-4"
+              <div className="flex-1 flex flex-col px-4 border-r border-gray-200">
+                <label className="text-sm font-medium text-gray-700 text-left">
+                  Check in
+                </label>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setDateRange([date, endDate])}
+                  placeholderText="Add dates"
+                  className="w-full outline-none text-gray-600 text-base placeholder-gray-400"
+                  wrapperClassName="w-full"
+                  calendarClassName="rounded-2xl border-none shadow-lg"
+                  dayClassName={(date) =>
+                    date.getDate() === 4 && date.getMonth() === 11
+                      ? "rounded-full bg-black text-white"
+                      : "rounded-full hover:bg-gray-100"
+                  }
+                  monthClassName="font-medium"
+                  weekDayClassName="font-medium text-gray-400"
+                  fixedHeight
+                  showPopperArrow={false}
+                />
+              </div>
+              <div className="flex-1 flex flex-col px-4 border-r border-gray-200">
+                <label className="text-sm font-medium text-gray-700 text-left">
+                  Check out
+                </label>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setDateRange([startDate, date])}
+                  placeholderText="Add dates"
+                  className="w-full outline-none text-gray-600 text-base placeholder-gray-400"
+                  wrapperClassName="w-full"
+                  calendarClassName="rounded-2xl border-none shadow-lg"
+                  dayClassName={(date) =>
+                    date.getDate() === 4 && date.getMonth() === 11
+                      ? "rounded-full bg-black text-white"
+                      : "rounded-full hover:bg-gray-100"
+                  }
+                  monthClassName="font-medium"
+                  weekDayClassName="font-medium text-gray-400"
+                  fixedHeight
+                  showPopperArrow={false}
+                />
+              </div>
+              <div className="flex-1 flex flex-col px-4">
+                <label
+                  htmlFor="guests"
+                  className="text-sm font-medium text-gray-700 text-left"
+                >
+                  Guests
+                </label>
+                <div className="relative">
+                  <select
+                    id="guests"
+                    className="select select-bordered w-full max-w-xs"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Select guests
+                    </option>
+                    <option value="1">1 Guest</option>
+                    <option value="2">2 Guests</option>
+                    <option value="3">3 Guests</option>
+                    <option value="4">4 Guests</option>
+                    <option value="5">5 Guests</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+              </div>
+              <button
+                className="bg-[#38d7ff] hover:bg-[#38d7ff]/90 text-white p-4 rounded-full flex items-center justify-center ml-2 transition-colors duration-200 ease-in-out hover:shadow-lg active:scale-95 transform"
                 onClick={handleSearch}
               >
-                <FaSearch className="mr-2" /> Search
-              </motion.button>
+                <FaSearch className="text-lg" />
+              </button>
             </div>
           </motion.div>
         </div>
@@ -144,7 +193,7 @@ export default function HomePage() {
                 <h3 className="card-title">{dest.name}</h3>
                 <p>{dest.description}</p>
                 <div className="card-actions justify-end">
-                  <motion.button 
+                  <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="btn btn-primary btn-sm"
@@ -219,7 +268,7 @@ export default function HomePage() {
                 }
               }}
             >
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="modal-box w-11/12 max-w-5xl"
@@ -227,7 +276,7 @@ export default function HomePage() {
                 <ViewDetails property={listing} />
                 <div className="modal-action">
                   <form method="dialog">
-                    <motion.button 
+                    <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="btn"

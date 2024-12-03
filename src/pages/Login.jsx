@@ -1,6 +1,14 @@
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import React, { useState } from "react";
-import { FaGoogle, FaFacebook, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  FaGoogle,
+  FaFacebook,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import app from "../firebase/firebase.init";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -11,12 +19,14 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -26,18 +36,35 @@ export default function Login() {
     const newErrors = {};
     if (!formData.email) newErrors.email = "Email is required";
     if (!formData.password) newErrors.password = "Password is required";
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // Dummy authentication - in real app, replace with actual auth
-    if (formData.email === "test@example.com" && formData.password === "password") {
-      navigate("/dashboard");
-    } else {
-      setErrors({ auth: "Invalid email or password" });
-    }
+    const auth = getAuth(app);
+    signInWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((userCredential) => {
+        console.log(userCredential.user);
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        setErrors({ auth: "Invalid email or password" });
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log(result.user);
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.log(error);
+        setErrors({ auth: "Google sign-in failed" });
+      });
   };
 
   return (
@@ -66,13 +93,17 @@ export default function Login() {
                 type="email"
                 name="email"
                 placeholder="your@email.com"
-                className={`input input-bordered ${errors.email ? 'input-error' : ''}`}
+                className={`input input-bordered ${
+                  errors.email ? "input-error" : ""
+                }`}
                 value={formData.email}
                 onChange={handleChange}
               />
               {errors.email && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.email}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.email}
+                  </span>
                 </label>
               )}
             </div>
@@ -86,7 +117,9 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Enter your password"
-                  className={`input input-bordered w-full ${errors.password ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full ${
+                    errors.password ? "input-error" : ""
+                  }`}
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -100,7 +133,9 @@ export default function Login() {
               </div>
               {errors.password && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.password}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.password}
+                  </span>
                 </label>
               )}
             </div>
@@ -129,7 +164,7 @@ export default function Login() {
           <div className="divider">OR</div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="btn btn-outline">
+            <button className="btn btn-outline" onClick={handleGoogleSignIn}>
               <FaGoogle className="mr-2" /> Google
             </button>
             <button className="btn btn-outline">
@@ -147,4 +182,4 @@ export default function Login() {
       </div>
     </div>
   );
-} 
+}

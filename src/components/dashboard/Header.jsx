@@ -1,7 +1,27 @@
-import React from 'react';
-import { FaBell, FaBars, FaUserCircle } from 'react-icons/fa';
+import { getAuth, signOut } from "firebase/auth";
+import React from "react";
+import {
+  FaBell,
+  FaBars,
+  FaUserCircle,
+  FaSignOutAlt,
+  FaCog,
+} from "react-icons/fa";
+import app from "../../firebase/firebase.init";
+import { toast } from 'react-toastify';
 
 export default function Header({ toggleSidebar, userMode, setUserMode }) {
+  const handleSignOut = () => {
+    const auth = getAuth(app);
+    signOut(auth)
+      .then(() => {
+        toast.success("Signed out successfully");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50 h-16">
       <div className="flex items-center justify-between px-4 h-full">
@@ -13,7 +33,9 @@ export default function Header({ toggleSidebar, userMode, setUserMode }) {
           >
             <FaBars className="h-5 w-5" />
           </button>
-          <h1 className="ml-4 text-xl font-semibold hidden sm:block">Dashboard</h1>
+          <h1 className="ml-4 text-xl font-semibold hidden sm:block">
+            Dashboard
+          </h1>
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-4">
@@ -21,19 +43,27 @@ export default function Header({ toggleSidebar, userMode, setUserMode }) {
           <div className="flex items-center bg-gray-100 rounded-lg p-1">
             <button
               className={`px-2 sm:px-3 py-1 text-sm sm:text-base rounded-md transition-all ${
-                userMode === 'guest' ? 'bg-white shadow-sm' : 'text-gray-600'
+                userMode === "guest" ? "bg-white shadow-sm" : "text-gray-600"
               }`}
-              onClick={() => setUserMode('guest')}
+              onClick={() => setUserMode("guest")}
             >
               Guest
             </button>
             <button
               className={`px-2 sm:px-3 py-1 text-sm sm:text-base rounded-md transition-all ${
-                userMode === 'host' ? 'bg-white shadow-sm' : 'text-gray-600'
+                userMode === "host" ? "bg-white shadow-sm" : "text-gray-600"
               }`}
-              onClick={() => setUserMode('host')}
+              onClick={() => setUserMode("host")}
             >
               Host
+            </button>
+            <button
+              className={`px-2 sm:px-3 py-1 text-sm sm:text-base rounded-md transition-all ${
+                userMode === "admin" ? "bg-white shadow-sm" : "text-gray-600"
+              }`}
+              onClick={() => setUserMode("admin")}
+            >
+              Admin
             </button>
           </div>
 
@@ -45,13 +75,45 @@ export default function Header({ toggleSidebar, userMode, setUserMode }) {
               </span>
             </button>
 
-            <button className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100">
-              <FaUserCircle className="h-5 w-5" />
-              <span className="hidden sm:block">John Doe</span>
-            </button>
+            <div className="dropdown dropdown-end">
+              <label
+                tabIndex={0}
+                className="btn w-fit pr-5 bg-gray-100 btn-ghost btn-circle avatar flex items-center "
+              >
+                <div className="rounded-full bg-primary/10 p-2">
+                  <FaUserCircle className="w-6 h-6" />
+                </div>
+                <h2 className="font-semibold ml-2">John Doe</h2>
+              </label>
+              <ul
+                tabIndex={0}
+                className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a>
+                    <FaUserCircle className="h-5 w-5" /> Profile
+                  </a>
+                </li>
+                <li>
+                  <a>
+                    <FaCog className="h-5 w-5" /> Settings
+                  </a>
+                </li>
+                <li>
+                  <a>
+                    <FaBell className="h-5 w-5" /> Notifications
+                  </a>
+                </li>
+                <li>
+                  <button onClick={handleSignOut}>
+                    <FaSignOutAlt className="h-5 w-5" /> Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </header>
   );
-} 
+}

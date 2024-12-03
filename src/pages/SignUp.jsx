@@ -1,6 +1,21 @@
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 import React, { useState } from "react";
-import { FaGoogle, FaFacebook, FaLock, FaUser, FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaGoogle,
+  FaFacebook,
+  FaLock,
+  FaUser,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import app from "../firebase/firebase.init";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -10,6 +25,7 @@ export default function SignUp() {
     confirmPassword: "",
     phone: "",
     acceptTerms: false,
+    role: "guest",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -18,10 +34,11 @@ export default function SignUp() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
+    setErrors({});
   };
 
   const handleSubmit = (e) => {
@@ -35,16 +52,42 @@ export default function SignUp() {
       newErrors.confirmPassword = "Passwords do not match";
     }
     if (!formData.phone) newErrors.phone = "Phone number is required";
-    if (!formData.acceptTerms) newErrors.acceptTerms = "You must accept the terms";
+    if (!formData.acceptTerms)
+      newErrors.acceptTerms = "You must accept the terms";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
+    const auth = getAuth(app);
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then((result) => {
+        // Update the user's profile with the display name and phone number
+        const user = result.user;
+        return updateProfile(user, {
+          displayName: formData.name,
+          phoneNumber: formData.phone, // Note: phoneNumber is not directly supported in updateProfile
+        });
+      })
+      .then(() => {
+        console.log("User profile updated successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
     // Dummy signup - replace with actual signup logic
     console.log("Signup successful!", formData);
     navigate("/login");
+  };
+
+  const handleGoogleSignUp = () => {
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider).then((result) => {
+      console.log(result.user);
+    });
   };
 
   return (
@@ -68,7 +111,9 @@ export default function SignUp() {
                   type="text"
                   name="name"
                   placeholder="John Doe"
-                  className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full ${
+                    errors.name ? "input-error" : ""
+                  }`}
                   value={formData.name}
                   onChange={handleChange}
                 />
@@ -76,7 +121,9 @@ export default function SignUp() {
               </div>
               {errors.name && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.name}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.name}
+                  </span>
                 </label>
               )}
             </div>
@@ -89,13 +136,17 @@ export default function SignUp() {
                 type="email"
                 name="email"
                 placeholder="your@email.com"
-                className={`input input-bordered ${errors.email ? 'input-error' : ''}`}
+                className={`input input-bordered ${
+                  errors.email ? "input-error" : ""
+                }`}
                 value={formData.email}
                 onChange={handleChange}
               />
               {errors.email && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.email}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.email}
+                  </span>
                 </label>
               )}
             </div>
@@ -109,7 +160,9 @@ export default function SignUp() {
                   type={showPassword ? "text" : "password"}
                   name="password"
                   placeholder="Enter your password"
-                  className={`input input-bordered w-full ${errors.password ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full ${
+                    errors.password ? "input-error" : ""
+                  }`}
                   value={formData.password}
                   onChange={handleChange}
                 />
@@ -123,7 +176,9 @@ export default function SignUp() {
               </div>
               {errors.password && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.password}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.password}
+                  </span>
                 </label>
               )}
             </div>
@@ -137,7 +192,9 @@ export default function SignUp() {
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmPassword"
                   placeholder="Confirm your password"
-                  className={`input input-bordered w-full ${errors.confirmPassword ? 'input-error' : ''}`}
+                  className={`input input-bordered w-full ${
+                    errors.confirmPassword ? "input-error" : ""
+                  }`}
                   value={formData.confirmPassword}
                   onChange={handleChange}
                 />
@@ -151,7 +208,9 @@ export default function SignUp() {
               </div>
               {errors.confirmPassword && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.confirmPassword}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.confirmPassword}
+                  </span>
                 </label>
               )}
             </div>
@@ -164,15 +223,35 @@ export default function SignUp() {
                 type="tel"
                 name="phone"
                 placeholder="123-456-7890"
-                className={`input input-bordered ${errors.phone ? 'input-error' : ''}`}
+                className={`input input-bordered ${
+                  errors.phone ? "input-error" : ""
+                }`}
                 value={formData.phone}
                 onChange={handleChange}
               />
               {errors.phone && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.phone}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.phone}
+                  </span>
                 </label>
               )}
+            </div>
+
+            <div className="form-control mt-4">
+              <label className="label">
+                <span className="label-text">Role</span>
+              </label>
+              <select
+                name="role"
+                className="select select-bordered w-full"
+                value={formData.role}
+                onChange={handleChange}
+              >
+                <option value="guest">Guest</option>
+                <option value="host">Host</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
 
             <div className="form-control mt-4">
@@ -184,11 +263,15 @@ export default function SignUp() {
                   onChange={handleChange}
                   className="checkbox checkbox-primary checkbox-sm"
                 />
-                <span className="label-text ml-2">I accept the terms and conditions</span>
+                <span className="label-text ml-2">
+                  I accept the terms and conditions
+                </span>
               </label>
               {errors.acceptTerms && (
                 <label className="label">
-                  <span className="label-text-alt text-error">{errors.acceptTerms}</span>
+                  <span className="label-text-alt text-error">
+                    {errors.acceptTerms}
+                  </span>
                 </label>
               )}
             </div>
@@ -201,7 +284,7 @@ export default function SignUp() {
           <div className="divider">OR</div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="btn btn-outline">
+            <button className="btn btn-outline" onClick={handleGoogleSignUp}>
               <FaGoogle className="mr-2" /> Google
             </button>
             <button className="btn btn-outline">
@@ -219,4 +302,4 @@ export default function SignUp() {
       </div>
     </div>
   );
-} 
+}

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { FaStar, FaWifi, FaParking, FaUtensils, FaDog } from 'react-icons/fa';
-import { MdLocationOn } from 'react-icons/md';
-import { FaPersonSwimming } from 'react-icons/fa6';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, FreeMode, Thumbs } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/free-mode';
-import 'swiper/css/thumbs';
+import React, { useState } from "react";
+import { FaStar, FaWifi, FaParking, FaUtensils, FaDog } from "react-icons/fa";
+import { MdLocationOn } from "react-icons/md";
+import { FaPersonSwimming } from "react-icons/fa6";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, FreeMode, Thumbs } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/free-mode";
+import "swiper/css/thumbs";
 
 const ViewDetails = ({ property }) => {
   if (!property) {
@@ -22,23 +22,19 @@ const ViewDetails = ({ property }) => {
   const images = property.images || [property.image];
 
   const amenities = [
-    { icon: <FaWifi />, label: 'Free Wi-Fi' },
-    { icon: <FaParking />, label: 'Parking' },
-    { icon: <FaPersonSwimming />, label: 'Pool' },
-    { icon: <FaUtensils />, label: 'Kitchen' },
-    { icon: <FaDog />, label: 'Pet-friendly' }
+    { icon: <FaWifi />, label: "Free Wi-Fi" },
+    { icon: <FaParking />, label: "Parking" },
+    { icon: <FaPersonSwimming />, label: "Pool" },
+    { icon: <FaUtensils />, label: "Kitchen" },
+    { icon: <FaDog />, label: "Pet-friendly" },
   ];
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => 
-      (prev + 1) % images.length
-    );
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => 
-      prev === 0 ? images.length - 1 : prev - 1
-    );
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   return (
@@ -47,9 +43,11 @@ const ViewDetails = ({ property }) => {
         <h1 className="text-3xl font-bold mb-2">{property.title}</h1>
         <div className="flex items-center text-gray-600">
           <MdLocationOn className="mr-1" />
-          <a 
-            href={`https://maps.google.com/?q=${encodeURIComponent(property.location)}`} 
-            target="_blank" 
+          <a
+            href={`https://maps.google.com/?q=${encodeURIComponent(
+              property.location
+            )}`}
+            target="_blank"
             rel="noopener noreferrer"
             className="hover:text-primary"
           >
@@ -61,12 +59,15 @@ const ViewDetails = ({ property }) => {
       <div className="mb-8">
         <Swiper
           style={{
-            '--swiper-navigation-color': '#fff',
-            '--swiper-pagination-color': '#fff',
+            "--swiper-navigation-color": "#fff",
+            "--swiper-pagination-color": "#fff",
           }}
           spaceBetween={10}
           navigation={true}
-          thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
+          thumbs={{
+            swiper:
+              thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+          }}
           modules={[FreeMode, Navigation, Thumbs]}
           className="h-96 rounded-lg"
         >
@@ -108,11 +109,15 @@ const ViewDetails = ({ property }) => {
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <FaStar className="text-yellow-400 mr-1" /> 
+              <FaStar className="text-yellow-400 mr-1" />
               <span className="font-bold">{property.rating}/5</span>
-              <span className="text-gray-600 ml-2">({property.reviewCount} reviews)</span>
+              <span className="text-gray-600 ml-2">
+                ({property.reviewCount} reviews)
+              </span>
             </div>
-            <button className="btn btn-secondary btn-sm">View All Reviews</button>
+            <button className="btn btn-secondary btn-sm">
+              View All Reviews
+            </button>
           </div>
 
           <div className="card bg-base-100 shadow-lg mb-6">
@@ -139,10 +144,10 @@ const ViewDetails = ({ property }) => {
           <div className="card bg-base-100 shadow-lg mb-6">
             <div className="card-body">
               <div className="flex items-center gap-4">
-                <img 
-                  src={property.host.profilePicture} 
+                <img
+                  src={property.host.profilePicture}
                   alt={`${property.host.name}'s profile`}
-                  className="w-16 h-16 rounded-full" 
+                  className="w-16 h-16 rounded-full"
                 />
                 <div>
                   <h4 className="font-bold">{property.host.name}</h4>
@@ -158,8 +163,12 @@ const ViewDetails = ({ property }) => {
           <div className="card bg-base-100 shadow-lg sticky top-4">
             <div className="card-body">
               <div className="mb-4">
-                <h3 className="text-2xl font-bold">${property.pricePerNight}/night</h3>
-                <p className="text-gray-600 text-sm">Additional fees may apply</p>
+                <h3 className="text-2xl font-bold">
+                  ${property.pricePerNight}/night
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Additional fees may apply
+                </p>
               </div>
 
               <div className="form-control mb-4">
@@ -175,14 +184,14 @@ const ViewDetails = ({ property }) => {
               <div className="form-control mb-6">
                 <label className="label">Guests</label>
                 <div className="flex items-center justify-between border rounded-lg p-2">
-                  <button 
+                  <button
                     className="btn btn-circle btn-sm"
                     onClick={() => setGuests(Math.max(1, guests - 1))}
                   >
                     -
                   </button>
                   <span className="font-bold">{guests}</span>
-                  <button 
+                  <button
                     className="btn btn-circle btn-sm"
                     onClick={() => setGuests(guests + 1)}
                   >
@@ -192,7 +201,9 @@ const ViewDetails = ({ property }) => {
               </div>
 
               <button className="btn btn-primary w-full mb-2">Book Now</button>
-              <button className="btn btn-outline btn-secondary w-full">Save to Wishlist</button>
+              <button className="btn btn-outline btn-secondary w-full">
+                Save to Wishlist
+              </button>
             </div>
           </div>
         </div>
@@ -201,7 +212,15 @@ const ViewDetails = ({ property }) => {
       <div className="mt-8">
         <h3 className="text-2xl font-bold mb-4">Location</h3>
         <div className="h-64 bg-base-200 rounded-lg flex items-center justify-center">
-          Interactive Map Placeholder
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2605.9413104449627!2d90.47183614408523!3d23.816860601030434!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c993d576bdcf%3A0x5db406570be99d8!2sN%20Block%20Bagan%20Bari!5e0!3m2!1sen!2sbd!4v1733210417571!5m2!1sen!2sbd"
+            width="100%"
+            height="350"
+            style={{ border: "0" }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </div>
     </div>

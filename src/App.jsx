@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import Login from "./pages/Login.jsx";
 import BecomeAHostPage from "./pages/BecomeAHostPage.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -24,9 +25,23 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/search-results" element={<SearchResults />} />
-          <Route path="/become-host" element={<BecomeAHostPage />} />
+          <Route 
+            path="/become-a-host" 
+            element={
+              <ProtectedRoute>
+                <BecomeAHostPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Error />} />
         </Routes>
         <Footer />
