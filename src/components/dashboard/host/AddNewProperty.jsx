@@ -21,7 +21,7 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function BecomeAHostPage() {
+export default function AddNewProperty() {
   const [activeStep, setActiveStep] = useState(1);
   const [formProgress, setFormProgress] = useState(0);
   const [images, setImages] = useState([]);
@@ -180,7 +180,7 @@ export default function BecomeAHostPage() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-4xl font-bold mb-4">Become a Host</h1>
+          <h1 className="text-4xl md:text-4xl font-bold mb-4">Add New Property</h1>
           <p className="text-base md:text-lg text-base-content/70 mb-6 md:mb-8 px-4">
             List your property and start earning today!
           </p>

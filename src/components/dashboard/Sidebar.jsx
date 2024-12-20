@@ -9,6 +9,7 @@ import {
   FaChartLine,
   FaBars,
   FaBug,
+  FaPlus,
 } from "react-icons/fa";
 
 export default function Sidebar({
@@ -28,62 +29,62 @@ export default function Sidebar({
   ];
 
   const hostMenuItems = [
-    { icon: FaBuilding, label: "Properties", section: "dashboard" },
+    { icon: FaBuilding, label: "Properties", section: "properties" },
+    { icon: FaPlus, label: "Add New Property", section: "add-new-property" },
     {
       icon: FaCalendarCheck,
       label: "Booking Requests",
       section: "booking-requests",
     },
     { icon: FaChartLine, label: "Earnings", section: "earnings" },
-    { icon: FaCog, label: "Profile Settings", section: "settings" },
+    { icon: FaCog, label: "Profile Settings", section: "profile-settings" },
   ];
 
   const adminMenuItems = [
-    { 
-      icon: FaHome, 
-      label: "Dashboard", 
+    {
+      icon: FaHome,
+      label: "Dashboard",
       section: "admin-dashboard",
-      path: "/admin/dashboard"
     },
-    { 
-      icon: FaCalendarCheck, 
-      label: "Approve Requests", 
+    {
+      icon: FaCalendarCheck,
+      label: "Approve Requests",
       section: "approve-requests",
-      path: "/admin/approve-requests"
     },
-    { 
-      icon: FaChartLine, 
-      label: "Reports", 
+    {
+      icon: FaChartLine,
+      label: "Reports",
       section: "reports",
-      path: "/admin/reports"
     },
-    { 
-      icon: FaCog, 
-      label: "Settings", 
+    {
+      icon: FaCog,
+      label: "Settings",
       section: "settings",
-      path: "/admin/settings"
     },
-    { 
-      icon: FaBug, 
-      label: "Bug Reports", 
+    {
+      icon: FaBug,
+      label: "Bug Reports",
       section: "bug-reports",
-      path: "/admin/bug-reports"
     },
   ];
 
-  const menuItems = userMode === "guest" ? guestMenuItems : userMode === "host" ? hostMenuItems : adminMenuItems;
+  const menuItems =
+    userMode === "guest"
+      ? guestMenuItems
+      : userMode === "host"
+      ? hostMenuItems
+      : adminMenuItems;
 
   const handleNavigation = (e, item) => {
     e.preventDefault();
     setActiveSection(item.section);
-    window.history.pushState({}, '', item.path);
     if (window.innerWidth < 1024) {
       toggleSidebar();
     }
   };
 
   return (
-    <div className="h-screen bg-white shadow-lg w-80 ">
+    <div className="h-screen bg-white shadow-lg w-80">
       <ul className="menu p-4">
         {menuItems.map((item, index) => (
           <li key={index}>

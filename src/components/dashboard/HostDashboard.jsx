@@ -1,14 +1,20 @@
-import React from 'react';
-import EarningsSection from './EarningsSection';
-import PropertiesSection from './PropertiesSection';
-
+import React from "react";
+import EarningsSection from "./host/EarningsSection";
+import PropertiesSection from "./host/PropertiesSection";
+import BookingRequests from "./host/BookingRequests";
+import ProfileSetings from "./host/ProfileSetings";
+import AddNewProperty from "./host/AddNewProperty";
 export default function HostDashboard({ activeSection }) {
-  if (activeSection === 'earnings') {
+  if (activeSection === "booking-requests") {
+    return <BookingRequests />;
+  } else if (activeSection === "earnings") {
     return <EarningsSection />;
-  }
-  
-  if (activeSection === 'dashboard') {
+  } else if (activeSection === "properties") {
     return <PropertiesSection />;
+  } else if (activeSection === "profile-settings") {
+    return <ProfileSetings />;
+  } else if (activeSection === "add-new-property") {
+    return <AddNewProperty />;
   }
 
   return (
@@ -20,13 +26,13 @@ export default function HostDashboard({ activeSection }) {
           <p className="text-3xl font-semibold mt-2">8</p>
           <p className="text-green-500 text-sm mt-2">+2 this month</p>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-gray-600 text-sm font-medium">Total Revenue</h3>
           <p className="text-3xl font-semibold mt-2">$12,480</p>
           <p className="text-green-500 text-sm mt-2">+18% vs last month</p>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-gray-600 text-sm font-medium">Occupancy Rate</h3>
           <p className="text-3xl font-semibold mt-2">76%</p>
@@ -37,7 +43,9 @@ export default function HostDashboard({ activeSection }) {
       {/* Add a bookings table similar to GuestDashboard for consistency */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="p-6">
-          <h2 className="text-lg font-semibold text-gray-800">Recent Reservations</h2>
+          <h2 className="text-lg font-semibold text-gray-800">
+            Recent Reservations
+          </h2>
           <div className="mt-4 overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               {/* Similar table structure as GuestDashboard */}
@@ -47,4 +55,4 @@ export default function HostDashboard({ activeSection }) {
       </div>
     </div>
   );
-} 
+}

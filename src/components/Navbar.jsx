@@ -3,6 +3,7 @@ import { FaHome } from "react-icons/fa";
 import navigationData from "../data/navigation.json";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const navigationItems = navigationData.navigationItems;
@@ -24,15 +25,16 @@ const Navbar = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigate('/');
+      navigate("/");
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
-  const filteredNavItems = navigationItems.filter(item => 
-    isLoggedIn ? item.name !== "Login" && item.name !== "Sign Up"
-    : item.name !== "Sign Out"
+  const filteredNavItems = navigationItems.filter((item) =>
+    isLoggedIn
+      ? item.name !== "Login" && item.name !== "Sign Up"
+      : item.name !== "Sign Out"
   );
 
   return (
@@ -42,32 +44,35 @@ const Navbar = () => {
         id="main-navbar"
       >
         <div className="flex-1">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="btn btn-ghost normal-case text-xl flex items-center hover:scale-105 transition-transform"
           >
             <FaHome className="mr-2 transition-transform" /> StayNest
-          </a>
+          </Link>
         </div>
         <div className="flex-none">
           {/* Desktop Navigation */}
           <ul className="menu menu-horizontal px-1 hidden md:flex">
             {filteredNavItems.map((item) => (
               <li key={item.name}>
-                <a
-                  href={item.path}
+                <Link
+                  to={item.path}
                   className="hover:text-primary hover:underline transition-all duration-300 group relative"
                 >
                   {item.name}
                   {item.name === "Become a Host" && (
                     <span className="absolute -top-2 -right-2 w-2 h-2 bg-primary rounded-full animate-pulse group-hover:animate-none"></span>
                   )}
-                </a>
+                </Link>
               </li>
             ))}
             {isLoggedIn && (
               <li>
-                <button onClick={handleSignOut} className="hover:text-primary hover:underline transition-all duration-300">
+                <button
+                  onClick={handleSignOut}
+                  className="hover:text-primary hover:underline transition-all duration-300"
+                >
                   Sign Out
                 </button>
               </li>
@@ -126,8 +131,8 @@ const Navbar = () => {
         <ul className="menu menu-vertical px-4 py-2">
           {filteredNavItems.map((item) => (
             <li key={item.name}>
-              <a
-                href={item.path}
+              <Link
+                to={item.path}
                 className="hover:text-primary hover:underline transition-all duration-300 group relative py-3"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -135,7 +140,7 @@ const Navbar = () => {
                 {item.name === "Become a Host" && (
                   <span className="absolute -top-2 -right-2 w-2 h-2 bg-primary rounded-full animate-pulse group-hover:animate-none"></span>
                 )}
-              </a>
+              </Link>
             </li>
           ))}
           {isLoggedIn && (

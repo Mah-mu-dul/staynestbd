@@ -5,7 +5,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaGoogle,
   FaFacebook,
@@ -16,6 +16,7 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import app from "../firebase/firebase.init";
+import { toast } from "react-toastify"; // Import toastify
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -30,6 +31,7 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -57,29 +59,62 @@ export default function SignUp() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      Object.keys(newErrors).forEach((key) => {
+        toast.error(newErrors[key], {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
       return;
     }
+
+    setLoading(true);
 
     const auth = getAuth(app);
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((result) => {
-        // Update the user's profile with the display name and phone number
         const user = result.user;
-        return updateProfile(user, {
-          displayName: formData.name,
-          phoneNumber: formData.phone, // Note: phoneNumber is not directly supported in updateProfile
+        console.log(user);
+        // Send user data to the backend
+        return fetch("http://localhost:5000/adduser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: user.uid, // Include Firebase UID
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            role: formData.role,
+          }),
         });
       })
-      .then(() => {
-        console.log("User profile updated successfully");
+      .then((response) => response.text())
+      .then((message) => {
+        console.log(message);
+        navigate("/login");
       })
       .catch((error) => {
         console.log(error);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-
-    // Dummy signup - replace with actual signup logic
-    console.log("Signup successful!", formData);
-    navigate("/login");
   };
 
   const handleGoogleSignUp = () => {
@@ -91,7 +126,11 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen  bg-base-200 flex items-center justify-center px-4 py-16 mt-10">
+    <div
+      className={`min-h-screen bg-base-200 flex items-center justify-center px-4 py-16 mt-10 ${
+        loading ? "pointer-events-none" : ""
+      }`}
+    >
       <div className="card w-full max-w-md bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="card-title text-2xl font-bold text-center justify-center mb-2">
@@ -153,7 +192,9 @@ export default function SignUp() {
 
             <div className="form-control mt-4">
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text">
+                  Password (6 characters minimum)
+                </span>
               </label>
               <div className="relative">
                 <input
@@ -165,6 +206,7 @@ export default function SignUp() {
                   }`}
                   value={formData.password}
                   onChange={handleChange}
+                  minLength="6"
                 />
                 <button
                   type="button"
@@ -197,6 +239,7 @@ export default function SignUp() {
                   }`}
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  minLength="6"
                 />
                 <button
                   type="button"
@@ -276,9 +319,15 @@ export default function SignUp() {
               )}
             </div>
 
-            <button type="submit" className="btn btn-primary w-full mt-6">
-              Sign Up
-            </button>
+            {loading ? (
+              <button disabled className="btn btn-primary w-full mt-6">
+                <span className="loading loading-spinner loading-sm"></span>
+              </button>
+            ) : (
+              <button type="submit" className="btn btn-primary w-full mt-6">
+                Sign Up
+              </button>
+            )}
           </form>
 
           <div className="divider">OR</div>

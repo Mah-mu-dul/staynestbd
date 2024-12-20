@@ -1,4 +1,10 @@
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+} from "firebase/auth";
 import React, { useState } from "react";
 import {
   FaGoogle,
@@ -18,9 +24,10 @@ export default function Login() {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Added state for loader
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -42,26 +49,39 @@ export default function Login() {
       return;
     }
 
+    setIsLoading(true); // Start loader
+
     const auth = getAuth(app);
     signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
-        console.log(userCredential.user);
-        navigate(from, { replace: true });
+        const user = userCredential.user;
+        // Fetch user role from MongoDB
+        return fetch(`http://localhost:5000/getuser?email=${user.email}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setIsLoading(false); // Stop loader
+            navigate(`/dashboard`, { replace: true });
+          });
       })
       .catch((error) => {
+        setIsLoading(false); // Stop loader
         setErrors({ auth: "Invalid email or password" });
+        signOut(auth);
       });
   };
 
   const handleGoogleSignIn = () => {
+    setIsLoading(true); // Start loader
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result.user);
+        setIsLoading(false); // Stop loader
         navigate(from, { replace: true });
       })
       .catch((error) => {
+        setIsLoading(false); // Stop loader
         console.log(error);
         setErrors({ auth: "Google sign-in failed" });
       });
@@ -156,7 +176,11 @@ export default function Login() {
               </Link>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full mt-6">
+            <button
+              type="submit"
+              className="btn btn-primary w-full mt-6"
+              disabled={isLoading}
+            >
               Login
             </button>
           </form>
@@ -164,7 +188,11 @@ export default function Login() {
           <div className="divider">OR</div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button className="btn btn-outline" onClick={handleGoogleSignIn}>
+            <button
+              className="btn btn-outline"
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+            >
               <FaGoogle className="mr-2" /> Google
             </button>
             <button className="btn btn-outline">

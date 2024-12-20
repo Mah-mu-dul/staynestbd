@@ -8,9 +8,10 @@ import {
   FaCog,
 } from "react-icons/fa";
 import app from "../../firebase/firebase.init";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
-export default function Header({ toggleSidebar, userMode, setUserMode }) {
+export default function Header({ toggleSidebar, loggedInUser }) {
   const handleSignOut = () => {
     const auth = getAuth(app);
     signOut(auth)
@@ -33,41 +34,23 @@ export default function Header({ toggleSidebar, userMode, setUserMode }) {
           >
             <FaBars className="h-5 w-5" />
           </button>
-          <h1 className="ml-4 text-xl font-semibold hidden sm:block">
+          <Link
+            to="/"
+            className="ml-4 text-xl font-semibold hidden sm:block"
+          >
+            Home
+          </Link>
+          <Link
+            to="/dashboard"
+            className="ml-4 text-xl font-semibold hidden sm:block"
+          >
             Dashboard
-          </h1>
+          </Link>
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* User Mode Toggle */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-1">
-            <button
-              className={`px-2 sm:px-3 py-1 text-sm sm:text-base rounded-md transition-all ${
-                userMode === "guest" ? "bg-white shadow-sm" : "text-gray-600"
-              }`}
-              onClick={() => setUserMode("guest")}
-            >
-              Guest
-            </button>
-            <button
-              className={`px-2 sm:px-3 py-1 text-sm sm:text-base rounded-md transition-all ${
-                userMode === "host" ? "bg-white shadow-sm" : "text-gray-600"
-              }`}
-              onClick={() => setUserMode("host")}
-            >
-              Host
-            </button>
-            <button
-              className={`px-2 sm:px-3 py-1 text-sm sm:text-base rounded-md transition-all ${
-                userMode === "admin" ? "bg-white shadow-sm" : "text-gray-600"
-              }`}
-              onClick={() => setUserMode("admin")}
-            >
-              Admin
-            </button>
-          </div>
-
           <div className="flex items-center space-x-2">
+            <h2></h2>
             <button className="relative p-2 rounded-full hover:bg-gray-100">
               <FaBell className="h-5 w-5" />
               <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
@@ -83,7 +66,9 @@ export default function Header({ toggleSidebar, userMode, setUserMode }) {
                 <div className="rounded-full bg-primary/10 p-2">
                   <FaUserCircle className="w-6 h-6" />
                 </div>
-                <h2 className="font-semibold ml-2">John Doe</h2>
+                <h2 className="font-semibold ml-2">
+                  {loggedInUser ? loggedInUser.displayName : "Guest"}
+                </h2>
               </label>
               <ul
                 tabIndex={0}
