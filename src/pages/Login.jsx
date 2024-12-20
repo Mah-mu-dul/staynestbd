@@ -56,7 +56,7 @@ export default function Login() {
       .then((userCredential) => {
         const user = userCredential.user;
         // Fetch user role from MongoDB
-        return fetch(`http://localhost:5000/getuser?email=${user.email}`)
+        return fetch(`https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/getuser?email=${user.email}`)
           .then((response) => response.json())
           .then((data) => {
             setIsLoading(false); // Stop loader

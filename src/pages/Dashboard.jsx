@@ -31,8 +31,10 @@ export default function Dashboard() {
     const auth = getAuth(app);
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Fetch user role from http://localhost:5000/getuser
-        fetch(`http://localhost:5000/getuser?email=${user.email}`)
+        // Fetch user role from https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/getuser
+        fetch(
+          `https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/getuser?email=${user.email}`
+        )
           .then((response) => response.json())
           .then((data) => {
             setLoggedInUser({
