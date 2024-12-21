@@ -127,7 +127,7 @@ export default function SignUp() {
 
   return (
     <div
-      className={`min-h-screen bg-base-200 flex items-center justify-center px-4 py-16 mt-10 ${
+      className={`min-h-screen bg-base-200 flex items-center justify-center px-4 py-16 ${
         loading ? "pointer-events-none" : ""
       }`}
     >
