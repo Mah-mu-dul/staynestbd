@@ -81,7 +81,7 @@ const ViewDetails = ({ property }) => {
       checkOut: dates.checkOut,
     };
 
-    fetch(`http://localhost:5000/addBooking`, {
+    fetch(`https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/addBooking`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

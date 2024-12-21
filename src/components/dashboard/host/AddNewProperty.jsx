@@ -159,7 +159,7 @@ export default function AddNewProperty() {
       };
 
       // Submit form data to backend
-      fetch("http://localhost:5000/addNewProperty", {
+      fetch("https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/addNewProperty", {
         // Replace with your backend URL
         method: "POST",
         headers: {

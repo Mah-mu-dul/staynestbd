@@ -24,7 +24,7 @@ const CheckoutForm = () => {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    fetch("http://localhost:5000/create-payment-intent", {
+    fetch("https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ price: 1000 }),

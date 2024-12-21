@@ -123,7 +123,7 @@ export default function PropertiesSection() {
 
     if (user) {
       const email = user.email; // Get the user's email
-      fetch(`http://localhost:5000/getHostProperties?email=${email}`, {
+      fetch(`https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/getHostProperties?email=${email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -179,7 +179,7 @@ export default function PropertiesSection() {
       "active"
         ? "inactive"
         : "active";
-    fetch("http://localhost:5000/updatePropertyStatus", {
+    fetch("https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/updatePropertyStatus", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
