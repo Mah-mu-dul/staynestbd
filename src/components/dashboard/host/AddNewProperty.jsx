@@ -20,6 +20,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getAuth } from "firebase/auth"; // Import Firebase Auth
 
 export default function AddNewProperty() {
   const [activeStep, setActiveStep] = useState(1);
@@ -27,10 +28,10 @@ export default function AddNewProperty() {
   const [images, setImages] = useState([]);
   const [availabilityDates, setAvailabilityDates] = useState([null, null]);
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    propertyType: "",
-    location: "",
+    title: "Cozy Apartment in Downtown",
+    description: "This is a cozy apartment located in the heart of the city.",
+    propertyType: "apartment",
+    location: "Downtown",
     amenities: {
       wifi: false,
       parking: false,
@@ -38,11 +39,16 @@ export default function AddNewProperty() {
       washerDryer: false,
       petFriendly: false,
     },
-    houseRules: "",
-    pricePerNight: "",
-    weeklyDiscount: "",
-    monthlyDiscount: "",
+    houseRules: "No smoking, no parties, no loud noises after 10pm.",
+    pricePerNight: "100",
+    weeklyDiscount: "10",
+    monthlyDiscount: "20",
+    country: "United States",
+    division: "California",
+    street: "Main Street",
+    houseNumber: "123",
   });
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -119,42 +125,102 @@ export default function AddNewProperty() {
       return;
     }
 
-    // Submit form data to backend
-    console.log("Submitting form data:", formData);
-    console.log("Uploaded images:", images);
-    console.log("Availability dates:", availabilityDates);
+    setLoading(true); // Set loading to true before submission
 
-    // Reset form
-    setFormData({
-      title: "",
-      description: "",
-      propertyType: "",
-      location: "",
-      amenities: {
-        wifi: false,
-        parking: false,
-        airConditioning: false,
-        washerDryer: false,
-        petFriendly: false,
-      },
-      houseRules: "",
-      pricePerNight: "",
-      weeklyDiscount: "",
-      monthlyDiscount: "",
-    });
-    setImages([]);
-    setAvailabilityDates([null, null]);
-    setActiveStep(1);
-    setFormProgress(0);
+    // Upload images to ImgBB
+    const uploadImages = async () => {
+      const apiKey = "1eaa2362071be5440fc4635a8af70ba4"; // Replace with your ImgBB API key
+      const imageUploadPromises = images.map((image) => {
+        const formData = new FormData();
+        formData.append("image", image.file);
+        return fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+          method: "POST",
+          body: formData,
+        }).then((response) => response.json());
+      });
 
-    toast.success("Property listing submitted successfully!", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      theme: "colored",
+      return Promise.all(imageUploadPromises);
+    };
+
+    uploadImages().then((imageResponses) => {
+      const imageLinks = imageResponses.map((response) => response.data.url);
+
+      // Get host email from Firebase Auth
+      const auth = getAuth();
+      const userEmail = auth.currentUser ? auth.currentUser.email : ""; // Get email
+
+      // Create the complete data object
+      const completeData = {
+        ...formData,
+        images: imageLinks,
+        availabilityDates: availabilityDates,
+        hostEmail: userEmail, // Add host email to the data
+        status: "active",
+      };
+
+      // Submit form data to backend
+      fetch("http://localhost:5000/addNewProperty", {
+        // Replace with your backend URL
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(completeData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Response from server:", data);
+          // Reset form
+          setFormData({
+            title: "",
+            description: "",
+            propertyType: "",
+            location: "",
+            amenities: {
+              wifi: false,
+              parking: false,
+              airConditioning: false,
+              washerDryer: false,
+              petFriendly: false,
+            },
+            houseRules: "",
+            pricePerNight: "",
+            weeklyDiscount: "",
+            monthlyDiscount: "",
+            country: "",
+            division: "",
+            street: "",
+            houseNumber: "",
+          });
+          setImages([]);
+          setAvailabilityDates([null, null]);
+          setActiveStep(1);
+          setFormProgress(0);
+
+          toast.success("Property listing submitted successfully!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+          });
+          setLoading(false); // Reset loading state
+        })
+        .catch((error) => {
+          console.error("Error submitting data:", error);
+          toast.error("Failed to submit property listing", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+          });
+          setLoading(false); // Reset loading state
+        });
     });
   };
 
@@ -180,7 +246,9 @@ export default function AddNewProperty() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-4xl font-bold mb-4">Add New Property</h1>
+          <h1 className="text-4xl md:text-4xl font-bold mb-4">
+            Add New Property
+          </h1>
           <p className="text-base md:text-lg text-base-content/70 mb-6 md:mb-8 px-4">
             List your property and start earning today!
           </p>
@@ -292,6 +360,62 @@ export default function AddNewProperty() {
                     <option value="condo">Condo</option>
                     <option value="studio">Studio</option>
                   </select>
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Country</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="country"
+                    placeholder="E.g., USA"
+                    className="input input-bordered w-full"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Division/State</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="division"
+                    placeholder="E.g., California"
+                    className="input input-bordered w-full"
+                    value={formData.division}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Street</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="street"
+                    placeholder="E.g., 123 Main St"
+                    className="input input-bordered w-full"
+                    value={formData.street}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">House Number</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="houseNumber"
+                    placeholder="E.g., 45B"
+                    className="input input-bordered w-full"
+                    value={formData.houseNumber}
+                    onChange={handleInputChange}
+                  />
                 </div>
 
                 {/* Image Upload */}
@@ -568,14 +692,18 @@ export default function AddNewProperty() {
           </div>
 
           <div className="mt-8 text-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn btn-primary btn-lg"
-              onClick={handleSubmit}
-            >
-              Submit Listing <FaCheckCircle className="ml-2" />
-            </motion.button>
+            {!loading ? (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn btn-primary btn-lg"
+                onClick={handleSubmit}
+              >
+                Submit Listing <FaCheckCircle className="ml-2" />
+              </motion.button>
+            ) : (
+              <div className="loading-indicator">Loading...</div>
+            )}
             <p className="mt-4 text-sm text-base-content/70">
               By listing your property, you agree to our Terms of Service and
               Privacy Policy
@@ -583,6 +711,9 @@ export default function AddNewProperty() {
           </div>
         </div>
       </div>
+      {/* Loading Indicator */}
+      {loading && <div className="loading-indicator">Loading...</div>}{" "}
+      {/* Add loading indicator */}
     </div>
   );
 }

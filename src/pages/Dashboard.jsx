@@ -108,7 +108,7 @@ export default function Dashboard() {
         loggedInUser={loggedInUser} // Pass the logged in user's information to the Header component
       />
 
-      <div className="pt-16 flex relative">
+      <div className="flex relative">
         {isSidebarOpen && (
           <div
             className="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-20"

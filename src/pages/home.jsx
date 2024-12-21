@@ -173,7 +173,7 @@ export default function HomePage() {
         <h2 className="text-3xl font-bold text-center mb-8" data-aos="fade-up">
           Popular Destinations
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {popularDestinations.map((dest, index) => (
             <motion.div
               key={index}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaStar, FaWifi, FaParking, FaUtensils, FaDog } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { FaPersonSwimming } from "react-icons/fa6";
@@ -9,6 +9,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/free-mode";
 import "swiper/css/thumbs";
+import { Link } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ViewDetails = ({ property }) => {
   if (!property) {
@@ -18,6 +22,10 @@ const ViewDetails = ({ property }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [guests, setGuests] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
+  const [dates, setDates] = useState({ checkIn: "", checkOut: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const images = property.images || [property.image];
 
@@ -29,12 +37,68 @@ const ViewDetails = ({ property }) => {
     { icon: <FaDog />, label: "Pet-friendly" },
   ];
 
+  useEffect(() => {
+    const auth = getAuth();
+    const userEmail = auth.currentUser ? auth.currentUser.email : ""; // Get email
+    if (userEmail) {
+      setUserEmail(userEmail); // Set the userId state
+    }
+  }, []);
+
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
   };
 
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleBookNow = () => {
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+    // Validate dates
+    if (!dates.checkIn || !dates.checkOut) {
+      setError("Please select both check-in and check-out dates."); // Set error message if dates are not selected
+      return;
+    }
+    if (new Date(dates.checkIn) < new Date(today)) {
+      setError("Check-in date cannot be before today's date."); // Set error message
+      return;
+    }
+    if (new Date(dates.checkIn) >= new Date(dates.checkOut)) {
+      setError("Check-out date must be after check-in date."); // Set error message
+      return;
+    }
+    setError(""); // Clear error if validation passes
+    setLoading(true); // Set loading to true
+
+    const bookingDetails = {
+      propertyId: property.id,
+      hostEmail: property.host.email,
+      userEmail: userEmail,
+      guests: guests,
+      checkIn: dates.checkIn,
+      checkOut: dates.checkOut,
+    };
+
+    fetch(`http://localhost:5000/addBooking`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(bookingDetails),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Booking response: ", data);
+        setLoading(false); // Set loading to false after response
+        toast.success("Booking successful!"); // Show success toast
+      })
+      .catch((err) => {
+        console.log("Booking error: ", err);
+        setLoading(false); // Set loading to false on error
+        toast.error("Booking failed. Please try again."); // Show error toast
+      });
   };
 
   return (
@@ -153,7 +217,11 @@ const ViewDetails = ({ property }) => {
                   <h4 className="font-bold">{property.host.name}</h4>
                   <p className="text-gray-600">{property.host.tagline}</p>
                 </div>
-                <button className="btn btn-accent ml-auto">Contact Host</button>
+                <Link to={`/chat?hostId=${property?.host?.id}`}>
+                  <button className="btn btn-accent ml-auto">
+                    Contact Host
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -171,14 +239,27 @@ const ViewDetails = ({ property }) => {
                 </p>
               </div>
 
-              <div className="form-control mb-4">
+              <div className="form-control mb-6">
                 <label className="label">Check-in / Check-out</label>
                 <div className="">
-                  <input type="date" className="input input-bordered w-full" />
+                  <input
+                    type="date"
+                    className="input input-bordered w-full"
+                    onChange={(e) =>
+                      setDates({ ...dates, checkIn: e.target.value })
+                    }
+                  />
                   <br />
                   <br />
-                  <input type="date" className="input input-bordered w-full" />
+                  <input
+                    type="date"
+                    className="input input-bordered w-full"
+                    onChange={(e) =>
+                      setDates({ ...dates, checkOut: e.target.value })
+                    }
+                  />
                 </div>
+                {error && <p className="text-red-500">{error}</p>}
               </div>
 
               <div className="form-control mb-6">
@@ -200,7 +281,13 @@ const ViewDetails = ({ property }) => {
                 </div>
               </div>
 
-              <button className="btn btn-primary w-full mb-2">Book Now</button>
+              <button
+                onClick={handleBookNow}
+                className="btn btn-primary w-full mb-2"
+                disabled={loading}
+              >
+                {loading ? "Booking..." : "Book Now"}
+              </button>
               <button className="btn btn-outline btn-secondary w-full">
                 Save to Wishlist
               </button>
@@ -223,6 +310,7 @@ const ViewDetails = ({ property }) => {
           />
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

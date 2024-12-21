@@ -22,10 +22,10 @@ export default function Sidebar({
   const sidebarRef = useRef(null);
 
   const guestMenuItems = [
-    { icon: FaHome, label: "Upcoming Bookings", section: "dashboard" },
-    { icon: FaHistory, label: "Booking History", section: "booking-history" },
-    { icon: FaHeart, label: "Saved Listings", section: "saved" },
-    { icon: FaCog, label: "Profile Settings", section: "settings" },
+    { icon: FaHome, label: "Upcoming Bookings", section: "UpcomingBookings" },
+    { icon: FaHistory, label: "Booking History", section: "BookingHistory" },
+    { icon: FaHeart, label: "Saved Listings", section: "SavedListings" },
+    { icon: FaCog, label: "Profile Settings", section: "ProfileSettings" },
   ];
 
   const hostMenuItems = [

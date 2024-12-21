@@ -82,6 +82,7 @@ export default function SignUp() {
         console.log(user);
         // Send user data to the backend
         return fetch("https://staynestbd-bakend-git-main-wannabepros-projects.vercel.app/adduser", {
+        // return fetch("http://localhost:5000/adduser", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

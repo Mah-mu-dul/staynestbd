@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Elements,
   PaymentElement,
@@ -18,6 +18,23 @@ const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Create PaymentIntent as soon as the page loads
+    fetch("http://localhost:5000/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ price: 1000 }),
+    })
+      .then((res) => res.json())
+      .then((data) => setClientSecret(data.clientSecret))
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,10 +61,33 @@ const CheckoutForm = () => {
       console.log(paymentMethod);
       setErrorMessage(null); // Clear error message on success
     }
+
+    const { error: confirmError, paymentIntent } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            email: "changeme@test.com" || "anonymous@test.com",
+            name: "John Doe" || "anonymous",
+          },
+        },
+      });
+
+    if (confirmError) {
+      setErrorMessage("Payment failed: " + confirmError.message);
+    } else {
+      console.log("paymentIntent", paymentIntent);
+      if (paymentIntent.status === "succeeded") {
+        setTransactionId(paymentIntent.id);
+      }
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: 'auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto p-5 border border-gray-300 rounded"
+    >
       <CardElement
         options={{
           style: {
@@ -61,10 +101,14 @@ const CheckoutForm = () => {
           },
         }}
       />
-      <button type="submit" disabled={!stripe || !elements} style={{ marginTop: '10px', padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+      <button
+        type="submit"
+        disabled={!stripe || !elements || !clientSecret}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded cursor-pointer"
+      >
         Pay
       </button>
-      {errorMessage && <div style={{ color: 'red', marginTop: '10px' }}>{errorMessage}</div>}
+      {errorMessage && <div className="text-red-500 mt-4">{errorMessage}</div>}
     </form>
   );
 };

@@ -61,9 +61,6 @@ const Navbar = () => {
                   className="hover:text-primary hover:underline transition-all duration-300 group relative"
                 >
                   {item.name}
-                  {item.name === "Become a Host" && (
-                    <span className="absolute -top-2 -right-2 w-2 h-2 bg-primary rounded-full animate-pulse group-hover:animate-none"></span>
-                  )}
                 </Link>
               </li>
             ))}
@@ -137,9 +134,6 @@ const Navbar = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.name}
-                {item.name === "Become a Host" && (
-                  <span className="absolute -top-2 -right-2 w-2 h-2 bg-primary rounded-full animate-pulse group-hover:animate-none"></span>
-                )}
               </Link>
             </li>
           ))}

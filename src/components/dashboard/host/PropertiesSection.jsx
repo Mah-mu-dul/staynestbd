@@ -1,120 +1,153 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEdit, FaEye, FaTrash, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { getAuth } from "firebase/auth"; // Import Firebase Auth
 
 export default function PropertiesSection() {
   const [properties, setProperties] = useState([
-    {
-      id: 1,
-      title: "Beachfront Villa",
-      location: "Miami, FL",
-      status: "active",
-      bookings: 12,
-      earnings: 24500,
-      image:
-        "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop",
-      occupancyRate: 78,
-      averageRating: 4.8,
-    },
-    {
-      id: 2,
-      title: "Mountain Cabin",
-      location: "Aspen, CO",
-      status: "active",
-      bookings: 8,
-      earnings: 18000,
-      image:
-        "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?q=80&w=2070&auto=format&fit=crop",
-      occupancyRate: 65,
-      averageRating: 4.6,
-    },
-    {
-      id: 3,
-      title: "Downtown Loft",
-      location: "New York, NY",
-      status: "inactive",
-      bookings: 15,
-      earnings: 32000,
-      image:
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2080&auto=format&fit=crop",
-      occupancyRate: 85,
-      averageRating: 4.9,
-    },
-    {
-      id: 4,
-      title: "Desert Oasis",
-      location: "Phoenix, AZ",
-      status: "active",
-      bookings: 6,
-      earnings: 12000,
-      image:
-        "https://images.unsplash.com/photo-1503951458645-643d53bfd90f?q=80&w=2070&auto=format&fit=crop",
-      occupancyRate: 45,
-      averageRating: 4.3,
-    },
-    {
-      id: 5,
-      title: "Lake House",
-      location: "Lake Tahoe, CA",
-      status: "active",
-      bookings: 10,
-      earnings: 28000,
-      image:
-        "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop",
-      occupancyRate: 72,
-      averageRating: 4.7,
-    },
-    {
-      id: 6,
-      title: "City Apartment",
-      location: "Chicago, IL",
-      status: "inactive",
-      bookings: 9,
-      earnings: 15000,
-      image:
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2080&auto=format&fit=crop",
-      occupancyRate: 58,
-      averageRating: 4.4,
-    },
-    {
-      id: 7,
-      title: "Oceanview Condo",
-      location: "San Diego, CA",
-      status: "active",
-      bookings: 14,
-      earnings: 29000,
-      image:
-        "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop",
-      occupancyRate: 82,
-      averageRating: 4.8,
-    },
-    {
-      id: 8,
-      title: "Historic Townhouse",
-      location: "Boston, MA",
-      status: "active",
-      bookings: 7,
-      earnings: 19500,
-      image:
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2080&auto=format&fit=crop",
-      occupancyRate: 63,
-      averageRating: 4.5,
-    },
-    {
-      id: 9,
-      title: "Forest Retreat",
-      location: "Portland, OR",
-      status: "inactive",
-      bookings: 5,
-      earnings: 11000,
-      image:
-        "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?q=80&w=2070&auto=format&fit=crop",
-      occupancyRate: 42,
-      averageRating: 4.2,
-    },
+    // {
+    //   id: 1,
+    //   title: "Beachfront Villa",
+    //   location: "Miami, FL",
+    //   status: "active",
+    //   bookings: 12,
+    //   price: 24500,
+    //   image:
+    //     "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop",
+    //   occupancyRate: 78,
+    //   averageRating: 4.8,
+    // },
+    // {
+    //   id: 2,
+    //   title: "Mountain Cabin",
+    //   location: "Aspen, CO",
+    //   status: "active",
+    //   bookings: 8,
+    //   price: 18000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?q=80&w=2070&auto=format&fit=crop",
+    //   occupancyRate: 65,
+    //   averageRating: 4.6,
+    // },
+    // {
+    //   id: 3,
+    //   title: "Downtown Loft",
+    //   location: "New York, NY",
+    //   status: "inactive",
+    //   bookings: 15,
+    //   price: 32000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2080&auto=format&fit=crop",
+    //   occupancyRate: 85,
+    //   averageRating: 4.9,
+    // },
+    // {
+    //   id: 4,
+    //   title: "Desert Oasis",
+    //   location: "Phoenix, AZ",
+    //   status: "active",
+    //   bookings: 6,
+    //   price: 12000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1503951458645-643d53bfd90f?q=80&w=2070&auto=format&fit=crop",
+    //   occupancyRate: 45,
+    //   averageRating: 4.3,
+    // },
+    // {
+    //   id: 5,
+    //   title: "Lake House",
+    //   location: "Lake Tahoe, CA",
+    //   status: "active",
+    //   bookings: 10,
+    //   price: 28000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop",
+    //   occupancyRate: 72,
+    //   averageRating: 4.7,
+    // },
+    // {
+    //   id: 6,
+    //   title: "City Apartment",
+    //   location: "Chicago, IL",
+    //   status: "inactive",
+    //   bookings: 9,
+    //   price: 15000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2080&auto=format&fit=crop",
+    //   occupancyRate: 58,
+    //   averageRating: 4.4,
+    // },
+    // {
+    //   id: 7,
+    //   title: "Oceanview Condo",
+    //   location: "San Diego, CA",
+    //   status: "active",
+    //   bookings: 14,
+    //   price: 29000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop",
+    //   occupancyRate: 82,
+    //   averageRating: 4.8,
+    // },
+    // {
+    //   id: 8,
+    //   title: "Historic Townhouse",
+    //   location: "Boston, MA",
+    //   status: "active",
+    //   bookings: 7,
+    //   price: 19500,
+    //   image:
+    //     "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=2080&auto=format&fit=crop",
+    //   occupancyRate: 63,
+    //   averageRating: 4.5,
+    // },
+    // {
+    //   id: 9,
+    //   title: "Forest Retreat",
+    //   location: "Portland, OR",
+    //   status: "inactive",
+    //   bookings: 5,
+    //   price: 11000,
+    //   image:
+    //     "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?q=80&w=2070&auto=format&fit=crop",
+    //   occupancyRate: 42,
+    //   averageRating: 4.2,
+    // },
     // Add more sample properties as needed
   ]);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const user = auth.currentUser; // Get the current user
+
+    if (user) {
+      const email = user.email; // Get the user's email
+      fetch(`http://localhost:5000/getHostProperties?email=${email}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const formattedProperties = data.map((property) => ({
+            id: property._id, // Use the MongoDB ID
+            title: property.title,
+            location: property.location,
+            status: property.status,
+            bookings: property.bookings || 0, // Default to 0 if not present
+            price: parseFloat(property.pricePerNight), // Convert to number
+            image: property.images[0], // Use the first image
+            occupancyRate: property.occupancyRate || 0, // Default to 0 if not present
+            averageRating: property.averageRating || 0, // Default to 0 if not present
+          }));
+          setProperties(formattedProperties);
+          console.log(formattedProperties);
+        })
+        .catch((error) => console.error("Error fetching properties:", error));
+    }
+  }, []);
 
   const [view, setView] = useState("grid");
   const [selectedProperties, setSelectedProperties] = useState([]);
@@ -141,20 +174,38 @@ export default function PropertiesSection() {
   };
 
   const handleStatusToggle = (propertyId) => {
-    setProperties(
-      properties.map((property) => {
-        if (property.id === propertyId) {
-          const newStatus =
-            property.status === "active" ? "inactive" : "active";
-          toast.success(`Property status changed to ${newStatus}`, {
-            position: "top-right",
-            autoClose: 3000,
-          });
-          return { ...property, status: newStatus };
+    const newStatus =
+      properties.find((property) => property.id === propertyId).status ===
+      "active"
+        ? "inactive"
+        : "active";
+    fetch("http://localhost:5000/updatePropertyStatus", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ propertyId, status: newStatus }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "Property updated successfully") {
+          setProperties(
+            properties.map((property) => {
+              if (property.id === propertyId) {
+                toast.success(`Property status changed to ${newStatus}`, {
+                  position: "top-right",
+                  autoClose: 3000,
+                });
+                return { ...property, status: newStatus };
+              }
+              return property;
+            })
+          );
+        } else {
+          console.error("Error updating property:", data.error);
         }
-        return property;
       })
-    );
+      .catch((error) => console.error("Error updating property:", error));
   };
 
   const handleDelete = (propertyId) => {
@@ -194,10 +245,10 @@ export default function PropertiesSection() {
 
     return [...filteredProperties].sort((a, b) => {
       switch (sortBy) {
-        case "earnings-high":
-          return b.earnings - a.earnings;
-        case "earnings-low":
-          return a.earnings - b.earnings;
+        case "price-high":
+          return b.price - a.price;
+        case "price-low":
+          return a.price - b.price;
         case "bookings":
           return b.bookings - a.bookings;
         default:
@@ -241,8 +292,8 @@ export default function PropertiesSection() {
             onChange={handleSort}
           >
             <option value="">All</option>
-            <option value="earnings-high">Earnings: High to Low</option>
-            <option value="earnings-low">Earnings: Low to High</option>
+            <option value="price-high">price: High to Low</option>
+            <option value="price-low">price: Low to High</option>
             <option value="bookings">Bookings</option>
           </select>
         </div>
@@ -310,7 +361,7 @@ export default function PropertiesSection() {
                   </span>
                 </div>
                 <p className="mt-2 text-primary font-semibold">
-                  ${property.earnings.toLocaleString()}
+                  ${property.price.toLocaleString()}
                 </p>
                 <div className="mt-4 flex space-x-2">
                   <button

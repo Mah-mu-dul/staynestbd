@@ -5,10 +5,6 @@
       "path": "/"
     },
     {
-      "name": "Become a Host",
-      "path": "/become-a-host"
-    },
-    {
       "name": "Dashboard",
       "path": "/dashboard"
     },
